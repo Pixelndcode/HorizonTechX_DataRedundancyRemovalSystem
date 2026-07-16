@@ -1,0 +1,202 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "code",
+      "source": [
+        "import sqlite3\n",
+        "\n",
+        "conn = sqlite3.connect(\"data.db\")\n",
+        "c = conn.cursor()\n",
+        "\n",
+        "c.execute(\"\"\"\n",
+        "CREATE TABLE IF NOT EXISTS records(\n",
+        "    id INTEGER PRIMARY KEY AUTOINCREMENT,\n",
+        "        name TEXT UNIQUE\n",
+        "        )\n",
+        "        \"\"\")\n",
+        "\n",
+        "conn.commit()\n",
+        "conn.close()\n",
+        "\n",
+        "print(\"Database Created Successfully\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 0
+        },
+        "id": "L_6lkbVSuJ2H",
+        "outputId": "944e3444-86e2-4233-84f7-e29b1b49e04d"
+      },
+      "execution_count": 33,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Database Created Successfully\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import sqlite3\n",
+        "\n",
+        "def add_data(name):\n",
+        "\n",
+        "    conn = sqlite3.connect(\"data.db\")\n",
+        "    c = conn.cursor()\n",
+        "\n",
+        "    try:\n",
+        "        c.execute(\n",
+        "            \"INSERT INTO records(name) VALUES(?)\",\n",
+        "            (name,)\n",
+        "        )\n",
+        "        conn.commit()\n",
+        "        print(\"✅ Unique Data Added Successfully\")\n",
+        "\n",
+        "    except:\n",
+        "        print(\"❌ Duplicate Data Found\")\n",
+        "\n",
+        "    finally:\n",
+        "        conn.close()"
+      ],
+      "metadata": {
+        "id": "TrLkTqwEvu8S"
+      },
+      "execution_count": 34,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "while True:\n",
+        "    data = input(\"Enter Customer Name: \")\n",
+        "    add_data(data)\n",
+        "\n",
+        "    choice = input(\"Add Another Record? (yes/no): \")\n",
+        "\n",
+        "    if choice.lower() != \"yes\":\n",
+        "        break"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 0
+        },
+        "id": "E3xu6vMOv-Qf",
+        "outputId": "81007a3b-87e2-4ce3-c721-fca83f483e92"
+      },
+      "execution_count": 38,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Enter Customer Name: Priyal\n",
+            "✅ Unique Data Added Successfully\n",
+            "Add Another Record? (yes/no): Yes\n",
+            "Enter Customer Name: Rudra\n",
+            "❌ Duplicate Data Found\n",
+            "Add Another Record? (yes/no): No\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import sqlite3\n",
+        "\n",
+        "conn = sqlite3.connect(\"data.db\")\n",
+        "c = conn.cursor()\n",
+        "\n",
+        "c.execute(\"SELECT * FROM records\")\n",
+        "records = c.fetchall()\n",
+        "\n",
+        "print(\"----- Stored Records -----\")\n",
+        "\n",
+        "for record in records:\n",
+        "    print(record)\n",
+        "\n",
+        "    conn.close()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 0
+        },
+        "id": "DwOkDEQrwPAk",
+        "outputId": "a51dde0f-695e-4e13-f359-2658a4eb86d0"
+      },
+      "execution_count": 39,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "----- Stored Records -----\n",
+            "(1, 'Deepali')\n",
+            "(2, 'Rahul')\n",
+            "(3, 'Rohit')\n",
+            "(4, 'Payal')\n",
+            "(5, 'Rudra')\n",
+            "(6, 'Priya')\n",
+            "(7, 'Hima shu')\n",
+            "(8, 'Priyal')\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import sqlite3\n",
+        "\n",
+        "conn = sqlite3.connect(\"data.db\")\n",
+        "c = conn.cursor()\n",
+        "\n",
+        "c.execute(\"SELECT COUNT(*) FROM records\")\n",
+        "count = c.fetchone()[0]\n",
+        "\n",
+        "print(\"Total Unique Records:\", count)\n",
+        "\n",
+        "conn.close()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 0
+        },
+        "id": "9SqnOOyiwRfW",
+        "outputId": "6517905a-65f0-4c7e-bf47-e415ad6cba7f"
+      },
+      "execution_count": 40,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Total Unique Records: 8\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
